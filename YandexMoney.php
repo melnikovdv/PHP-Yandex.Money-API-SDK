@@ -2,6 +2,9 @@
 
 namespace Yandex;
 
+use Yandex\YandexMoney\Exception as Exceptions;
+use Yandex\YandexMoney\ApiRequestor;
+
 /**
  * 
  */
@@ -92,7 +95,7 @@ class YandexMoney
         }
         $params = http_build_query($paramArray);
 
-        $requestor = new YM_ApiRequestor();
+        $requestor = new ApiRequestor();
         $resp = $requestor->request(self::URI_TOKEN, $params);
 
         return new YM_ReceiveTokenResponse($resp);
@@ -104,7 +107,7 @@ class YandexMoney
      */
     public function revokeOAuthToken($accessToken)
     {
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/revoke');
 
         return true;
@@ -115,7 +118,7 @@ class YandexMoney
      */
     public function accountInfo($accessToken)
     {
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/account-info');
 
         return new YM_AccountInfoResponse($resp);
@@ -146,7 +149,7 @@ class YandexMoney
             $params = '';
         }
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/operation-history', $params);
 
         return new YM_OperationHistoryResponse($resp);
@@ -161,7 +164,7 @@ class YandexMoney
         $paramArray['operation_id'] = $operationId;
         $params = http_build_query($paramArray);
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/operation-details', $params);
 
         return new YM_OperationDetail($resp);
@@ -183,7 +186,7 @@ class YandexMoney
         $paramArray['message'] = $message;
         $params = http_build_query($paramArray);
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/request-payment', $params);
 
         return new YM_RequestPaymentResponse($resp);
@@ -199,7 +202,7 @@ class YandexMoney
         $paramArray['money_source'] = 'wallet';
         $params = http_build_query($paramArray);
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/process-payment', $params);
 
         return new YM_ProcessPaymentResponse($resp);
@@ -213,7 +216,7 @@ class YandexMoney
     {
         $params = http_build_query($shopParams);
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/request-payment', $params);
 
         return new YM_RequestPaymentResponse($resp);
@@ -232,7 +235,7 @@ class YandexMoney
         $paramArray['csc'] = $csc;
         $params = http_build_query($paramArray);
 
-        $requestor = new YM_ApiRequestor($accessToken, $this->logFile);
+        $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/process-payment', $params);
         
         return new YM_ProcessPaymentResponse($resp);
@@ -240,25 +243,15 @@ class YandexMoney
 
     /**
      * @param string $clientId
+     * @throws \Yandex\YandexMoney\Exception\Exception
      */
     private static function _validateClientId($clientId)
     {
         if (($clientId == null) || ($clientId === '')) {
-            throw new YM_Error("You must pass a valid application client_id");
+            throw new Exceptions\Exception('You must pass a valid application client_id');
         }
     }
 }
-
-// Errors
-require(dirname(__FILE__) . '/YandexMoney/Error.php');
-require(dirname(__FILE__) . '/YandexMoney/ApiConnectionError.php');
-require(dirname(__FILE__) . '/YandexMoney/ApiError.php');
-require(dirname(__FILE__) . '/YandexMoney/InsufficientScopeError.php');
-require(dirname(__FILE__) . '/YandexMoney/InternalServerError.php');
-require(dirname(__FILE__) . '/YandexMoney/InvalidTokenError.php');
-
-// Plumbing
-require(dirname(__FILE__) . '/YandexMoney/ApiRequestor.php');
 
 // Yandex.Money API Resources
 require(dirname(__FILE__) . '/YandexMoney/ReceiveTokenResponse.php');
