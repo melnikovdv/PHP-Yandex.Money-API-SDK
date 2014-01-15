@@ -2,8 +2,9 @@
 
 namespace Yandex;
 
-use Yandex\YandexMoney\Exception as Exceptions;
 use Yandex\YandexMoney\ApiRequestor;
+use Yandex\YandexMoney\Exception as Exceptions;
+use Yandex\YandexMoney\Response as Responses;
 
 /**
  * 
@@ -83,6 +84,7 @@ class YandexMoney
      * @param string $code
      * @param string $redirectUri
      * @param string $clientSecret
+     * @return \Yandex\YandexMoney\Response\ReceiveTokenResponse
      */
     public function receiveOAuthToken($code, $redirectUri, $clientSecret = null)
     {
@@ -98,7 +100,7 @@ class YandexMoney
         $requestor = new ApiRequestor();
         $resp = $requestor->request(self::URI_TOKEN, $params);
 
-        return new YM_ReceiveTokenResponse($resp);
+        return new Responses\ReceiveTokenResponse($resp);
     }
 
     /**
@@ -115,13 +117,14 @@ class YandexMoney
 
     /**
      * @param string $accessToken
+     * @return \Yandex\YandexMoney\Response\AccountInfoResponse
      */
     public function accountInfo($accessToken)
     {
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/account-info');
 
-        return new YM_AccountInfoResponse($resp);
+        return new Responses\AccountInfoResponse($resp);
     }
 
     /**
@@ -129,6 +132,7 @@ class YandexMoney
      * @param int $startRecord
      * @param int $records
      * @param string $type
+     * @return \Yandex\YandexMoney\Response\OperationHistoryResponse
      */
     public function operationHistory($accessToken, $startRecord = null, $records = null, $type = null)
     {
@@ -152,7 +156,7 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/operation-history', $params);
 
-        return new YM_OperationHistoryResponse($resp);
+        return new Responses\OperationHistoryResponse($resp);
     }
 
     /**
@@ -176,6 +180,7 @@ class YandexMoney
      * @param float $amount
      * @param string $comment
      * @param string $message
+     * @return \Yandex\YandexMoney\Response\RequestPaymentResponse
      */
     public function requestPaymentP2P($accessToken, $to, $amount, $comment = null, $message = null)
     {
@@ -189,12 +194,13 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/request-payment', $params);
 
-        return new YM_RequestPaymentResponse($resp);
+        return new Responses\RequestPaymentResponse($resp);
     }
 
     /**
      * @param string $accessToken
      * @param string $requestId
+     * @return \Yandex\YandexMoney\Response\ProcessPaymentResponse
      */
     public function processPaymentByWallet($accessToken, $requestId) 
     {
@@ -205,12 +211,13 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/process-payment', $params);
 
-        return new YM_ProcessPaymentResponse($resp);
+        return new Responses\ProcessPaymentResponse($resp);
     }
 
     /**
      * @param string $accessToken
      * @param string $shopParams
+     * @return \Yandex\YandexMoney\Response\RequestPaymentResponse
      */
     public function requestPaymentShop($accessToken, $shopParams)
     {
@@ -219,7 +226,7 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/request-payment', $params);
 
-        return new YM_RequestPaymentResponse($resp);
+        return new Response\RequestPaymentResponse($resp);
     }
 
 
@@ -227,6 +234,7 @@ class YandexMoney
      * @param string $accessToken
      * @param string $requestId
      * @param string $csc
+     * @return \Yandex\YandexMoney\Response\ProcessPaymentResponse
      */
     public function processPaymentByCard($accessToken, $requestId, $csc)
     {
@@ -238,7 +246,7 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/process-payment', $params);
         
-        return new YM_ProcessPaymentResponse($resp);
+        return new Responses\ProcessPaymentResponse($resp);
     }
 
     /**
@@ -254,10 +262,5 @@ class YandexMoney
 }
 
 // Yandex.Money API Resources
-require(dirname(__FILE__) . '/YandexMoney/ReceiveTokenResponse.php');
-require(dirname(__FILE__) . '/YandexMoney/AccountInfoResponse.php');
-require(dirname(__FILE__) . '/YandexMoney/OperationHistoryResponse.php');
 require(dirname(__FILE__) . '/YandexMoney/Operation.php');
 require(dirname(__FILE__) . '/YandexMoney/OperationDetail.php');
-require(dirname(__FILE__) . '/YandexMoney/RequestPaymentResponse.php');
-require(dirname(__FILE__) . '/YandexMoney/ProcessPaymentResponse.php');
