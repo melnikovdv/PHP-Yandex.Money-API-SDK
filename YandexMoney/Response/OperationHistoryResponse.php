@@ -2,6 +2,8 @@
 
 namespace Yandex\YandexMoney\Response;
 
+use Yandex\YandexMoney\Operation\Operation;
+
 /**
  * 
  */
@@ -39,7 +41,7 @@ class OperationHistoryResponse implements ResponseInterface
 
         if (isset($operations['operations'])) {
             foreach ($operations['operations'] as $operation) {
-                $this->operations[] = new YM_Operation($operation);
+                $this->operations[] = new Operation($operation);
             }
         }
     }

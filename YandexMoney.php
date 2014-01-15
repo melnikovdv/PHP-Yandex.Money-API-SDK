@@ -3,6 +3,7 @@
 namespace Yandex;
 
 use Yandex\YandexMoney\ApiRequestor;
+use Yandex\YandexMoney\Operation\OperationDetail;
 use Yandex\YandexMoney\Exception as Exceptions;
 use Yandex\YandexMoney\Response as Responses;
 
@@ -171,7 +172,7 @@ class YandexMoney
         $requestor = new ApiRequestor($accessToken, $this->logFile);
         $resp = $requestor->request(self::URI_API . '/operation-details', $params);
 
-        return new YM_OperationDetail($resp);
+        return new OperationDetail($resp);
     }
 
     /**
@@ -260,7 +261,3 @@ class YandexMoney
         }
     }
 }
-
-// Yandex.Money API Resources
-require(dirname(__FILE__) . '/YandexMoney/Operation.php');
-require(dirname(__FILE__) . '/YandexMoney/OperationDetail.php');
