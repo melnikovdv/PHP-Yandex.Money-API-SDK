@@ -68,7 +68,7 @@ class ApiRequestor
         curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         //        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, true);
-        curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . '/../data/ca-certificate.crt');
+        curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . '/../Resources/data/ca-certificate.crt');
                                     
         $this->_log($this->_makeRequestLogMessage($uri, $params));  
 
