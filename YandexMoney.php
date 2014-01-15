@@ -135,7 +135,7 @@ class YandexMoney
      * @param string $type
      * @return \Yandex\YandexMoney\Response\OperationHistoryResponse
      */
-    public function operationHistory($accessToken, $startRecord = null, $records = null, $type = null)
+    public function operationHistory($accessToken, $startRecord = null, $records = null, $type = null, $from = null, $till = null, $label = null)
     {
         $paramArray = array();
         if (isset($type)) {
@@ -146,6 +146,18 @@ class YandexMoney
         }
         if (isset($records)) {
             $paramArray['records'] = $records;
+        }
+
+        if (isset($label)) {
+            $paramArray['label'] = $label;
+        }
+
+        if (isset($from)) {
+            $paramArray['from'] = $from;
+        }
+
+        if (isset($till)) {
+            $paramArray['till'] = $till;
         }
 
         if (count($paramArray) > 0) {
@@ -183,13 +195,14 @@ class YandexMoney
      * @param string $message
      * @return \Yandex\YandexMoney\Response\RequestPaymentResponse
      */
-    public function requestPaymentP2P($accessToken, $to, $amount, $comment = null, $message = null)
+    public function requestPaymentP2P($accessToken, $to, $amount, $comment = null, $message = null, $label = null)
     {
         $paramArray['pattern_id'] = 'p2p';
         $paramArray['to'] = $to;
         $paramArray['amount'] = $amount;
         $paramArray['comment'] = $comment;
         $paramArray['message'] = $message;
+        $paramArray['label'] = $label;
         $params = http_build_query($paramArray);
 
         $requestor = new ApiRequestor($accessToken, $this->logFile);

@@ -69,16 +69,21 @@ if (!isset($code)) { // If we are just begginig OAuth
         print "</p>";
 
         $operations = $resp->getOperations();
-        $requestId = $operations[0]->getOperationId();
-        $resp = $ym->operationDetail($token, $requestId);
-        print "<p class=\"output\">";
-        if ($resp->isSuccess()) {
-            var_dump($resp);
+        if (count($operations) > 0) {
+            $requestId = $operations[0]->getOperationId();
+            $resp = $ym->operationDetail($token, $requestId);
+            print "<p class=\"output\">";
+            if ($resp->isSuccess()) {
+                var_dump($resp);
+            } else {
+                print "Error: " . $resp->getError();
+                die();
+            }
+            print "</p>";    
         } else {
-            print "Error: " . $resp->getError();
-            die();
+            print "<p>You have no any history records at your account to request details.</p>";
         }
-        print "</p>";
+        
 
         $resp = $ym->requestPaymentP2P($token, "410011161616877", "0.02");
         print "<p class=\"output\">";
@@ -104,7 +109,7 @@ if (!isset($code)) { // If we are just begginig OAuth
         $params["pattern_id"] = "337";
         $params["PROPERTY1"] = "921";
         $params["PROPERTY2"] = "3020052";
-        $params["sum"] = "1.00";
+        $params["sum"] = "2.00";
         $resp = $ym->requestPaymentShop($token, $params);
         print "<p class=\"output\">";
         if ($resp->isSuccess()) {
@@ -116,7 +121,7 @@ if (!isset($code)) { // If we are just begginig OAuth
         print "</p>";
 
         $requestId = $resp->getRequestId();
-        $resp = $ym->processPaymentByCard($token, $requestId, "375");
+        $resp = $ym->processPaymentByCard($token, $requestId, "111");
         print "<p class=\"output\">";
         if ($resp->isSuccess()) {
             var_dump($resp);

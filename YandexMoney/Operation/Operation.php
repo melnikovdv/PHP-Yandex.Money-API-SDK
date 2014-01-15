@@ -38,6 +38,11 @@ class Operation
     protected $title;
 
     /**
+     * @var string
+     */
+    protected $status;
+
+    /**
      * @param array $operation
      */
     public function __construct(array $operation)
@@ -59,6 +64,9 @@ class Operation
         }
         if (isset($operation['datetime'])) {
             $this->datetime = strtotime($operation['datetime']);
+        }
+        if (isset($operation['status'])) {
+            $this->status = $operation['status'];
         }
     }
 
@@ -115,5 +123,13 @@ class Operation
     public function getTitle()
     {
         return $this->title;
+    }
+    
+    /**
+     * @return string возвращает статус платежа (перевода).
+     */
+    public function getStatus() 
+    {
+        return $this->status;
     }
 }

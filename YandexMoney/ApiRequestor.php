@@ -37,11 +37,10 @@ class ApiRequestor
      * @param string $params
      * @return array
      */
-    public function request($uri, $params = null)
+    public function request($uri, $params = null, $expectResponseBody = true)
     {
         list($rbody, $rcode) = $this->_curlRequest($uri, $params);
-
-        return $this->_interpretResponse($rbody, $rcode);
+        return $this->_interpretResponse($rbody, $rcode, $expectResponseBody);
     }
 
     /**
@@ -95,10 +94,10 @@ class ApiRequestor
      * 
      * @throws \Yandex\YandexMoney\Exception\ApiException
      */
-    private function _interpretResponse($rbody, $rcode)
+    private function _interpretResponse($rbody, $rcode, $expectResponseBody)
     {
         if ($rcode < 200 || $rcode >= 300) {
-            $this->_handleApiError($rbody, $rcode, $resp);
+            $this->_handleApiError($rbody, $rcode, $expectResponseBody);
         }
 
         try {
@@ -112,7 +111,7 @@ class ApiRequestor
         //     throw new YM_ApiError("Json parsing error with json_last_error code = " . json_last_error(), $rcode, $rbody);
         // }
 
-        if ($resp === null) {
+        if ($resp === null && $expectResponseBody) {
             throw new Exception\ApiException("Server response body is null: $rbody (HTTP response code was $rcode)", $rcode, $rbody);
         }
         
@@ -185,14 +184,13 @@ class ApiRequestor
     {
         $f = $this->logFile;
         if ($f !== null) {
-            if (!file_exists($f)) {
-                throw new Exception\Exception("log file $f not found");
-            }
-            if (!is_file($f)) {
-                throw new Exception\Exception("log file $f is not a file");
-            }
-            if (!is_writable($f)) {
-                throw new Exception\Exception("log file $f is not writable");
+            if (file_exists($f)) {
+                if (!is_file($f)) {
+                    throw new Exception\Exception("log file $f is not a file");
+                }
+                if (!is_writable($f)) {
+                    throw new Exception\Exception("log file $f is not writable");
+                }
             }
                 
             if (!$handle = fopen($f, 'a')) {
