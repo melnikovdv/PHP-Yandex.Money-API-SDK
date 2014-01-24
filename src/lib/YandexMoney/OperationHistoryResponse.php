@@ -14,7 +14,7 @@ class YM_OperationHistoryResponse {
 
         if (isset($operationsArray['operations'])) {
             foreach ($operationsArray['operations'] as $operation) {
-                $this->operations[] = new YM_Operation($operation);
+                $this->operations[] = new YM_OperationDetail($operation);
             }
         }
     }

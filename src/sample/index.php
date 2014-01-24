@@ -58,7 +58,7 @@ if (!isset($code)) { // If we are just begginig OAuth
         print "</p>";
 
 
-        $resp = $ym->operationHistory($token, 0, 3);
+        $resp = $ym->operationHistory($token, 0, 3, null, null, null, null, "true");
         print "<p class=\"output\">";
         if ($resp->isSuccess()) {
             var_dump($resp);
